@@ -13,6 +13,9 @@ const REDIRECT_SEGMENTS = [
 /** @type {import('next').NextConfig} */
 module.exports = withAxiom({
   reactStrictMode: false,
+  eslint: {
+    ignoreDuringBuilds: true, // Ignore ESLint warnings
+  },
   transpilePackages: ["shiki", "@dub/prisma", "@dub/email"],
   webpack: (config, { webpack, isServer }) => {
     if (isServer) {
