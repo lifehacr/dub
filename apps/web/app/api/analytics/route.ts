@@ -24,7 +24,7 @@ export const GET = withWorkspace(
 
     // for backwards compatibility (we used to support /analytics/[endpoint] as well)
     if (!oldType && oldEvent && VALID_ANALYTICS_ENDPOINTS.includes(oldEvent)) {
-      oldType = oldEvent;
+      oldType = oldEvent as "count" | "time"; // Ensure the type is correct
       oldEvent = undefined;
     }
 
