@@ -22,9 +22,9 @@ export const GET = withWorkspace(
     let { eventType: oldEvent, endpoint: oldType } =
       analyticsPathParamsSchema.parse(params);
 
-    // Ensure backwards compatibility
+    // Ensure backwards compatibility and correct typing
     if (!oldType && oldEvent && VALID_ANALYTICS_ENDPOINTS.includes(oldEvent)) {
-      oldType = oldEvent as "count" | "time"; // Explicit type assignment
+      oldType = oldEvent as "count" | "time"; // Correct type casting
       oldEvent = undefined;
     }
 
@@ -46,7 +46,11 @@ export const GET = withWorkspace(
     let link: Link | null = null;
 
     event = oldEvent || event;
-    groupBy = oldType || groupBy;
+    groupBy = (oldType as "count" | "time") || groupBy; // Ensures correct type
+
+    if (!groupBy || (groupBy !== "count" && groupBy !== "time")) {
+      throw new Error(`Invalid value for groupBy: ${groupBy}`); // Validation
+    }
 
     if (domain) {
       await getDomainOrThrow({ workspace, domain });
@@ -92,7 +96,7 @@ export const GET = withWorkspace(
 
     // Identify deprecated clicks endpoint
     const isDeprecatedClicksEndpoint =
-      oldEvent === "clicks" || oldType === "count" || oldType === "time";
+      oldEvent === "clicks" || groupBy === "count" || groupBy === "time";
 
     const response = await getAnalytics({
       ...parsedParams,
