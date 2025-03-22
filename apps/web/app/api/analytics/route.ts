@@ -96,7 +96,7 @@ export const GET = withWorkspace(
     // (/api/analytics/clicks/clicks)
     // (/api/analytics/clicks/count)
     const isDeprecatedClicksEndpoint =
-      oldEvent === "clicks" || oldType === "count";
+      oldEvent === "clicks" || oldType === "count" | "time";
 
     const response = await getAnalytics({
       ...parsedParams,
